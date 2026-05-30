@@ -1,8 +1,11 @@
+use crate::data::block::{Block, Data, Error, Field};
+pub use crate::data::filter::{
+    engine::Engine,
+    interval::{Interval, IntervalSet},
+};
+
 mod engine;
 mod interval;
-
-use crate::data::block::{Block, Data, Error, Field};
-use crate::data::filter::interval::IntervalSet;
 
 struct Filter {
     field: Field,
