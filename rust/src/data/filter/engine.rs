@@ -1,29 +1,29 @@
 use crate::data::{
     block::{Block, Error},
     filter::{
-        Filter,
         interval::{IntervalSet, intersect_interval_sets},
+        storage::FilterStorage,
     },
 };
 
 pub struct Engine {
-    filters: Vec<Filter>,
+    storage: FilterStorage,
 }
 
 impl Engine {
     pub fn new() -> Self {
         Engine {
-            filters: Vec::new(),
+            storage: FilterStorage::new(),
         }
     }
 
-    pub fn filters_mut(&mut self) -> &mut Vec<Filter> {
-        &mut self.filters
+    pub fn storage_mut(&mut self) -> &mut FilterStorage {
+        &mut self.storage
     }
 
     pub fn apply_filters(&self, block: &mut Block) -> Result<IntervalSet, Error> {
         let interval_sets: Vec<IntervalSet> = self
-            .filters
+            .storage
             .iter()
             .map(|filter| filter.apply(block))
             .collect::<Result<Vec<_>, Error>>()?;

@@ -9,6 +9,7 @@ mod builder;
 mod engine;
 pub mod field_filters;
 mod interval;
+mod storage;
 
 pub struct Filter {
     field: Field,
