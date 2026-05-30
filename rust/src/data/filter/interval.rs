@@ -6,8 +6,12 @@ pub struct Interval {
 }
 
 impl Interval {
-    fn new(start: u32, end: u32) -> Self {
-        Interval { start, end }
+    pub(super) fn new(start: u32, end: u32) -> Result<Self, ()> {
+        if start < end {
+            Ok(Interval { start, end })
+        } else {
+            Err(())
+        }
     }
 }
 
@@ -43,11 +47,7 @@ fn intersect_intervals(intervals: &[&Interval]) -> Option<Interval> {
         .iter()
         .min_by_key(|Interval { start: _, end }| end)?;
 
-    if start < end {
-        Some(Interval::new(*start, *end))
-    } else {
-        None
-    }
+    Interval::new(*start, *end).ok()
 }
 
 pub(super) fn intersect_interval_sets(mut interval_sets: Vec<IntervalSet>) -> IntervalSet {
