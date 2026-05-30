@@ -7,12 +7,12 @@ use crate::data::primitives::{
     DecodeStringError, DecodeVarintError, decode_optional_string, decode_varint_u64, skip_varint,
 };
 
-pub type Offset = u32;
+pub(super) type Offset = u32;
 
-pub struct BlockLayout {
-    pub position: u64,
-    pub size: u32,
-    pub offsets: [Offset; 26],
+pub(super) struct BlockLayout {
+    pub(super) position: u64,
+    pub(super) size: u32,
+    pub(super) offsets: [Offset; 26],
 }
 
 impl BlockLayout {

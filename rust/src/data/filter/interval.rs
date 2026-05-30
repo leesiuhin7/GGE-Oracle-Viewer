@@ -50,7 +50,7 @@ fn intersect_intervals(intervals: &[&Interval]) -> Option<Interval> {
     }
 }
 
-pub fn intersect_interval_sets(mut interval_sets: Vec<IntervalSet>) -> IntervalSet {
+pub(super) fn intersect_interval_sets(mut interval_sets: Vec<IntervalSet>) -> IntervalSet {
     // Setup heap
     let mut heap: BinaryHeap<(_, usize)> = BinaryHeap::with_capacity(interval_sets.len());
     // Reverse the unions so the first interval is at the end now

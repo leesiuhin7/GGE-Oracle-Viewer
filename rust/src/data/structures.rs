@@ -33,7 +33,7 @@ pub mod rle {
         }
     }
 
-    pub fn unpack<T, R: Read + Seek, F>(
+    pub(in crate::data) fn unpack<T, R: Read + Seek, F>(
         reader: &mut R,
         size: u64,
         read_fn: F,
@@ -78,7 +78,10 @@ pub mod delta {
         }
     }
 
-    pub fn unpack(reader: &mut (impl Read + Seek), size: u64) -> Result<Vec<Option<i64>>, Error> {
+    pub(in crate::data) fn unpack(
+        reader: &mut (impl Read + Seek),
+        size: u64,
+    ) -> Result<Vec<Option<i64>>, Error> {
         let end_pos = reader.stream_position()? + size;
         skip_varint(reader)?;
         reader.seek_relative(4)?;
@@ -104,8 +107,8 @@ pub mod delta_rle {
         DecodeVarintError, decode_varint_optional_i64, decode_varint_u64, skip_varint,
     };
     pub struct Run {
-        delta: Option<i64>,
-        count: u64,
+        pub delta: Option<i64>,
+        pub count: u64,
     }
 
     #[derive(Debug)]
@@ -126,7 +129,10 @@ pub mod delta_rle {
         }
     }
 
-    pub fn unpack(reader: &mut (impl Read + Seek), size: u64) -> Result<Vec<Run>, Error> {
+    pub(in crate::data) fn unpack(
+        reader: &mut (impl Read + Seek),
+        size: u64,
+    ) -> Result<Vec<Run>, Error> {
         let end_pos = reader.stream_position()? + size;
         skip_varint(reader)?;
         reader.seek_relative(12)?;
@@ -169,7 +175,7 @@ pub mod header {
         }
     }
 
-    pub fn unpack(reader: &mut (impl Read + Seek)) -> Result<Header, Error> {
+    pub(in crate::data) fn unpack(reader: &mut (impl Read + Seek)) -> Result<Header, Error> {
         let mut buffer = [0u8; 4];
         reader.read_exact(&mut buffer)?;
         let id = u32::from_be_bytes(buffer);
@@ -207,7 +213,7 @@ pub mod locations {
             .collect()
     }
 
-    pub fn unpack(
+    pub(in crate::data) fn unpack(
         reader: &mut (impl Read + Seek),
         size: u64,
     ) -> Result<Vec<rle::Run<Option<Vec<Location>>>>, rle::Error> {
@@ -273,7 +279,7 @@ pub mod coat_of_arms {
         }
     }
 
-    pub fn unpack(
+    pub(in crate::data) fn unpack(
         reader: &mut (impl Read + Seek),
         size: u64,
     ) -> Result<Vec<rle::Run<Option<CoatOfArms>>>, Error> {

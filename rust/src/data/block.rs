@@ -147,7 +147,7 @@ pub struct Block<'a> {
 }
 
 impl<'a> Block<'a> {
-    pub fn new(bytes: Box<[u8]>, offsets: &'a [u32]) -> Self {
+    pub(super) fn new(bytes: Box<[u8]>, offsets: &'a [u32]) -> Self {
         Block {
             cursor: Cursor::new(bytes),
             offsets,

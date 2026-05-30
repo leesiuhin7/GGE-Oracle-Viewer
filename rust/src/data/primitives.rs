@@ -26,7 +26,7 @@ impl From<String> for DecodeVarintError {
     }
 }
 
-pub fn decode_varint_u64(reader: &mut impl Read) -> Result<u64, DecodeVarintError> {
+pub(super) fn decode_varint_u64(reader: &mut impl Read) -> Result<u64, DecodeVarintError> {
     let mut value: u64 = 0;
 
     for shift in (0..=63).step_by(7) {
@@ -46,7 +46,7 @@ pub fn decode_varint_u64(reader: &mut impl Read) -> Result<u64, DecodeVarintErro
     Err("Varint is too large for u64".to_string())?
 }
 
-pub fn skip_varint(reader: &mut impl Read) -> Result<(), std::io::Error> {
+pub(super) fn skip_varint(reader: &mut impl Read) -> Result<(), std::io::Error> {
     loop {
         let mut buffer = [0u8];
         reader.read_exact(&mut buffer)?;
@@ -56,11 +56,11 @@ pub fn skip_varint(reader: &mut impl Read) -> Result<(), std::io::Error> {
     }
 }
 
-pub fn decode_varint_i64(reader: &mut impl Read) -> Result<i64, DecodeVarintError> {
+pub(super) fn decode_varint_i64(reader: &mut impl Read) -> Result<i64, DecodeVarintError> {
     Ok(decode_zigzag(decode_varint_u64(reader)?))
 }
 
-pub fn decode_varint_optional_i64(
+pub(super) fn decode_varint_optional_i64(
     reader: &mut impl Read,
 ) -> Result<Option<i64>, DecodeVarintError> {
     Ok(match decode_varint_u64(reader)? {
@@ -93,7 +93,9 @@ impl From<FromUtf8Error> for DecodeStringError {
     }
 }
 
-pub fn decode_optional_string(reader: &mut impl Read) -> Result<Option<String>, DecodeStringError> {
+pub(super) fn decode_optional_string(
+    reader: &mut impl Read,
+) -> Result<Option<String>, DecodeStringError> {
     Ok(match decode_varint_u64(reader)? {
         0 => None,
         value => {
@@ -105,7 +107,7 @@ pub fn decode_optional_string(reader: &mut impl Read) -> Result<Option<String>, 
     })
 }
 
-pub fn decode_optional_varint_array(
+pub(super) fn decode_optional_varint_array(
     reader: &mut impl Read,
 ) -> Result<Option<Vec<i64>>, DecodeVarintError> {
     match decode_varint_u64(reader)? {
