@@ -141,13 +141,13 @@ impl Field {
     }
 }
 
-pub struct Block<'a, 'b> {
-    cursor: Cursor<&'a [u8]>,
-    offsets: &'b [Offset],
+pub struct Block<'a> {
+    cursor: Cursor<Box<[u8]>>,
+    offsets: &'a [Offset],
 }
 
-impl<'a, 'b> Block<'a, 'b> {
-    pub fn new(bytes: &'a [u8], offsets: &'b [u32]) -> Self {
+impl<'a> Block<'a> {
+    pub fn new(bytes: Box<[u8]>, offsets: &'a [u32]) -> Self {
         Block {
             cursor: Cursor::new(bytes),
             offsets,
