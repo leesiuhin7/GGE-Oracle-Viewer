@@ -1,5 +1,6 @@
 use std::io::Cursor;
 
+use crate::data::layout::Offset;
 use crate::data::primitives::decode_varint_optional_i64;
 
 use super::primitives::decode_optional_string;
@@ -139,8 +140,6 @@ impl Field {
         }
     }
 }
-
-pub type Offset = u32;
 
 pub struct Block<'a, 'b> {
     cursor: Cursor<&'a [u8]>,
