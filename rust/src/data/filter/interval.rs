@@ -1,0 +1,90 @@
+use std::{cmp::Reverse, collections::BinaryHeap};
+
+pub struct Interval {
+    pub start: u32,
+    pub end: u32,
+}
+
+impl Interval {
+    fn new(start: u32, end: u32) -> Self {
+        Interval { start, end }
+    }
+}
+
+struct IntervalByEnd(Interval);
+
+impl PartialEq for IntervalByEnd {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.end.eq(&other.0.end)
+    }
+}
+
+impl Eq for IntervalByEnd {}
+
+impl PartialOrd for IntervalByEnd {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for IntervalByEnd {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.0.end.cmp(&other.0.end)
+    }
+}
+
+pub type IntervalSet = Vec<Interval>;
+
+fn intersect_intervals(intervals: &[&Interval]) -> Option<Interval> {
+    let Interval { start, end: _ } = intervals
+        .iter()
+        .max_by_key(|Interval { start, end: _ }| start)?;
+    let Interval { start: _, end } = intervals
+        .iter()
+        .min_by_key(|Interval { start: _, end }| end)?;
+
+    if start < end {
+        Some(Interval::new(*start, *end))
+    } else {
+        None
+    }
+}
+
+pub fn intersect_interval_sets(mut interval_sets: Vec<IntervalSet>) -> IntervalSet {
+    // Setup heap
+    let mut heap: BinaryHeap<(_, usize)> = BinaryHeap::with_capacity(interval_sets.len());
+    // Reverse the unions so the first interval is at the end now
+    for (i, set) in interval_sets.iter_mut().enumerate() {
+        set.reverse();
+        if let Some(interval) = set.pop() {
+            heap.push((Reverse(IntervalByEnd(interval)), i));
+        } else {
+            return Vec::new();
+        }
+    }
+
+    let mut interval_set: IntervalSet = Vec::new();
+    loop {
+        // Get all intervals in the heap to prepare for intersection
+        let intervals = heap
+            .iter()
+            .map(|(Reverse(IntervalByEnd(set)), _)| set)
+            .collect::<Vec<_>>();
+
+        // Only push if an interval can be computed
+        if let Some(interval) = intersect_intervals(&intervals) {
+            interval_set.push(interval);
+        }
+
+        // Replace the interval that has the lowest end value
+        if let Some((_, i)) = heap.pop()
+            && let Some(interval) = interval_sets[i].pop()
+        {
+            heap.push((Reverse(IntervalByEnd(interval)), i));
+        } else {
+            // Exit loop if heap is empty or an interval set has been exhausted
+            break;
+        }
+    }
+    interval_set
+}
