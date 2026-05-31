@@ -1,5 +1,6 @@
 mod data;
 mod utils;
+mod wasm;
 
 use wasm_bindgen::prelude::*;
 
