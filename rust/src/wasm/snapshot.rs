@@ -101,7 +101,7 @@ impl<'a> SnapshotBuilder<'a> {
                 return None;
             };
             let snapshot_data = resolve_field(data, snapshot_id)?;
-            snapshot.set(field, snapshot_data).err()?;
+            snapshot.set(field, snapshot_data).ok()?;
         }
         Some(snapshot)
     }
