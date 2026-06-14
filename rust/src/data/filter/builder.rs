@@ -79,6 +79,11 @@ fn filter_rle_delta<F: Fn(Option<i64>) -> bool>(
             end += u32::try_from(count).unwrap();
         }
     }
+    if let Some(s) = start
+        && let Ok(interval) = Interval::new(s, end)
+    {
+        interval_set.push(interval);
+    }
     interval_set
 }
 
