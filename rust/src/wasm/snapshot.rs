@@ -28,12 +28,12 @@ fn resolve_delta_rle(deltas: Vec<delta_rle::Run>, snapshot_id: u32) -> DeltaValu
     let mut value = 0i64;
     let mut counter = 0u64;
     for delta_rle::Run { delta, count } in deltas {
-        counter += count;
-        if u64::from(snapshot_id) < counter {
+        if u64::from(snapshot_id) < counter + count {
             let Some(d) = delta else {
                 return DeltaValue::None;
             };
-            if let Ok(n) = i64::try_from(counter - u64::from(snapshot_id)) {
+            // Adding 1 to make n from 0..count to 1..=count
+            if let Ok(n) = i64::try_from(u64::from(snapshot_id) - counter + 1) {
                 value += d * n;
                 return DeltaValue::Value(value);
             }
@@ -45,24 +45,21 @@ fn resolve_delta_rle(deltas: Vec<delta_rle::Run>, snapshot_id: u32) -> DeltaValu
             };
             value += d * c;
         }
+        counter += count;
     }
     DeltaValue::Failed
 }
 
-fn resolve_timestamp(deltas: Vec<i64>, snapshot_id: u32) -> Option<i64> {
-    if deltas.len() > snapshot_id as usize {
-        None
-    } else {
-        Some(deltas.into_iter().take(snapshot_id as usize).sum())
-    }
+fn resolve_timestamp(timestamps: &[i64], snapshot_id: u32) -> Option<i64> {
+    timestamps.get(snapshot_id as usize).copied()
 }
 
 fn resolve_field(data: Data, snapshot_id: u32) -> Option<SnapshotData> {
     match data {
         Data::Header(header) => Some(SnapshotData::Header(header)),
         Data::Deltas(_) => unreachable!(),
-        Data::Timestamps(deltas) => Some(SnapshotData::Timestamp(resolve_timestamp(
-            deltas,
+        Data::Timestamps(timestamps) => Some(SnapshotData::Timestamp(resolve_timestamp(
+            &timestamps,
             snapshot_id,
         )?)),
         Data::RleDelta(deltas) => match resolve_delta_rle(deltas, snapshot_id) {
