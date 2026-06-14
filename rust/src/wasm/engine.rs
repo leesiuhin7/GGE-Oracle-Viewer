@@ -1,25 +1,17 @@
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    data::{
-        BlockReader, Engine as FilterEngine,
-        filter::{Interval, build_filter},
-    },
+    data::{BlockReader, Engine as FilterEngine, filter::build_filter},
     wasm::{
         fields::WrapperField,
         file_wrapper::{FileReader, FileWrapper, SyncFile},
         filter_wrapper::Filter,
         layout::LayoutWrapper,
+        match_result::{MatchResult, SnapshotInfo},
         snapshot::SnapshotBuilder,
         snapshot_data::Snapshot,
     },
 };
-
-#[wasm_bindgen]
-pub struct SnapshotInfo {
-    block_id: usize,
-    snapshot_id: u32,
-}
 
 #[wasm_bindgen]
 pub struct Engine {
@@ -48,8 +40,11 @@ impl Engine {
         self.filter_engine.storage_mut().remove(id).is_some()
     }
 
-    pub fn match_all(&mut self, skip: usize, take: usize) -> Vec<SnapshotInfo> {
-        self.block_reader
+    pub fn match_all(&mut self) -> MatchResult {
+        let mut result = MatchResult::new();
+
+        for (block_id, interval_set) in self
+            .block_reader
             .blocks()
             // Map blocks to intervals
             .map(|block| match block {
@@ -59,24 +54,10 @@ impl Engine {
             // Assign id to each block
             .enumerate()
             .filter_map(|(block_id, interval_set)| interval_set.map(|set| (block_id, set)))
-            // Convert intervals into snapshots
-            .flat_map(|(block_id, interval_set)| {
-                let mut snapshots = Vec::new();
-                for Interval { start, end } in interval_set {
-                    if !(start == 0 && end == u32::MAX) {
-                        for snapshot_id in start..end {
-                            snapshots.push(SnapshotInfo {
-                                block_id,
-                                snapshot_id,
-                            });
-                        }
-                    }
-                }
-                snapshots
-            })
-            .skip(skip)
-            .take(take)
-            .collect::<Vec<_>>()
+        {
+            result.add(block_id, interval_set);
+        }
+        result
     }
 
     #[allow(clippy::needless_pass_by_value)]
