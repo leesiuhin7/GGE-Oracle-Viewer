@@ -44,8 +44,10 @@ impl Expr {
     pub fn filter(filter: Filter) -> Expr {
         Expr(ExprWrapper::Filter(filter))
     }
+}
 
-    pub(super) fn into_expr(self) -> filter::Expr {
-        self.0.into()
+impl From<Expr> for filter::Expr {
+    fn from(value: Expr) -> Self {
+        value.0.into()
     }
 }

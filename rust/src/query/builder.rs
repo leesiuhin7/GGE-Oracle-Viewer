@@ -4,7 +4,7 @@ use crate::{
         block::{Data, Field},
         structures::{delta_rle, rle},
     },
-    wasm::snapshot_data::{Snapshot, SnapshotData},
+    query::snapshot::{Snapshot, SnapshotData},
 };
 
 fn resolve_rle<T>(runs: Vec<rle::Run<T>>, snapshot_id: u32) -> Option<T> {
@@ -82,16 +82,20 @@ fn resolve_field(data: Data, snapshot_id: u32) -> Option<SnapshotData> {
     }
 }
 
-pub struct SnapshotBuilder<'a> {
+pub(super) struct SnapshotBuilder<'a> {
     block: Block<'a>,
 }
 
 impl<'a> SnapshotBuilder<'a> {
-    pub fn new(block: Block<'a>) -> Self {
+    pub(super) fn new(block: Block<'a>) -> Self {
         SnapshotBuilder { block }
     }
 
-    pub fn build_snapshot(&mut self, snapshot_id: u32, fields: Vec<Field>) -> Option<Snapshot> {
+    pub(super) fn build_snapshot(
+        &mut self,
+        snapshot_id: u32,
+        fields: Vec<Field>,
+    ) -> Option<Snapshot> {
         let mut snapshot = Snapshot::new();
         for field in fields {
             let Ok(data) = self.block.read_field(&field) else {

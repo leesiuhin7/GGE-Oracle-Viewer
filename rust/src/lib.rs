@@ -1,5 +1,6 @@
 mod data;
 mod filter;
+mod query;
 mod utils;
 mod wasm;
 

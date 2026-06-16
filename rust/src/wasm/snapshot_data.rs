@@ -1,18 +1,9 @@
 use wasm_bindgen::prelude::*;
 
-use crate::data::{
-    block::{AllianceField, BasicField, FactionField, Field, TimerField},
-    structures::{coat_of_arms, header, locations},
+use crate::{
+    data::structures::{coat_of_arms, header, locations},
+    query,
 };
-
-pub enum SnapshotData {
-    Header(header::Header),
-    Timestamp(i64),
-    I64(Option<i64>),
-    String(Option<String>),
-    Locations(Option<Vec<locations::Location>>),
-    CoatOfArms(Option<coat_of_arms::CoatOfArms>),
-}
 
 #[wasm_bindgen]
 #[derive(Clone)]
@@ -23,52 +14,84 @@ pub struct HeaderWrapper {
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct Header {
     #[wasm_bindgen(getter_with_clone)]
     pub value: Option<HeaderWrapper>,
     pub present: bool,
 }
 
-impl Header {
-    fn new(header: header::Header) -> Self {
-        let header::Header { id, server } = header;
-        Header {
-            value: Some(HeaderWrapper { id, server }),
-            present: true,
+impl From<query::SnapshotField<header::Header>> for Header {
+    fn from(value: query::SnapshotField<header::Header>) -> Self {
+        match value {
+            query::SnapshotField::None => Header {
+                value: None,
+                present: false,
+            },
+            query::SnapshotField::Some(header::Header { id, server }) => Header {
+                value: Some(HeaderWrapper { id, server }),
+                present: true,
+            },
         }
     }
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy)]
 pub struct I64 {
     pub value: Option<i64>,
     pub present: bool,
 }
 
-impl I64 {
-    fn new(value: Option<i64>) -> Self {
-        I64 {
-            value,
-            present: true,
+impl From<query::SnapshotField<Option<i64>>> for I64 {
+    fn from(value: query::SnapshotField<Option<i64>>) -> Self {
+        match value {
+            query::SnapshotField::None => I64 {
+                value: None,
+                present: false,
+            },
+            query::SnapshotField::Some(v) => I64 {
+                value: v,
+                present: true,
+            },
+        }
+    }
+}
+
+impl From<query::SnapshotField<i64>> for I64 {
+    fn from(value: query::SnapshotField<i64>) -> Self {
+        match value {
+            query::SnapshotField::None => I64 {
+                value: None,
+                present: false,
+            },
+            query::SnapshotField::Some(v) => I64 {
+                value: Some(v),
+                present: true,
+            },
         }
     }
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct OptionalString {
     #[wasm_bindgen(getter_with_clone)]
     pub value: Option<String>,
     pub present: bool,
 }
 
-impl OptionalString {
-    fn new(value: Option<String>) -> Self {
-        OptionalString {
-            value,
-            present: true,
+impl From<query::SnapshotField<Option<String>>> for OptionalString {
+    fn from(value: query::SnapshotField<Option<String>>) -> Self {
+        match value {
+            query::SnapshotField::None => OptionalString {
+                value: None,
+                present: false,
+            },
+            query::SnapshotField::Some(string) => OptionalString {
+                value: string,
+                present: true,
+            },
         }
     }
 }
@@ -84,18 +107,22 @@ pub struct LocationWrapper {
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct Locations {
     #[wasm_bindgen(getter_with_clone)]
     pub value: Option<Vec<LocationWrapper>>,
     pub present: bool,
 }
 
-impl Locations {
-    fn new(locations: Option<Vec<locations::Location>>) -> Self {
-        if let Some(l) = locations {
-            Locations {
-                value: Some(
+impl From<query::SnapshotField<Option<Vec<locations::Location>>>> for Locations {
+    fn from(value: query::SnapshotField<Option<Vec<locations::Location>>>) -> Self {
+        match value {
+            query::SnapshotField::None => Locations {
+                value: None,
+                present: false,
+            },
+            query::SnapshotField::Some(locations) => {
+                let wrappers = locations.map(|l| {
                     l.into_iter()
                         .map(
                             |locations::Location {
@@ -112,14 +139,13 @@ impl Locations {
                                 location_type,
                             },
                         )
-                        .collect(),
-                ),
-                present: true,
-            }
-        } else {
-            Locations {
-                value: None,
-                present: true,
+                        .collect::<Vec<_>>()
+                });
+
+                Locations {
+                    value: wrappers,
+                    present: true,
+                }
             }
         }
     }
@@ -139,51 +165,52 @@ pub struct CoatOfArmsWrapper {
 }
 
 #[wasm_bindgen]
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct CoatOfArms {
     #[wasm_bindgen(getter_with_clone)]
     pub value: Option<CoatOfArmsWrapper>,
     pub present: bool,
 }
 
-impl CoatOfArms {
-    #[allow(clippy::needless_pass_by_value)]
-    fn new(coat_of_arms: Option<coat_of_arms::CoatOfArms>) -> Self {
-        if let Some(coat_of_arms::CoatOfArms {
-            bg_type,
-            bg_color1,
-            bg_color2,
-            symbol_pos_type,
-            symbol_type1,
-            symbol_color1,
-            symbol_type2,
-            symbol_color2,
-        }) = coat_of_arms
-        {
-            CoatOfArms {
-                value: Some(CoatOfArmsWrapper {
-                    bg_type,
-                    bg_color1,
-                    bg_color2,
-                    symbol_pos_type,
-                    symbol_type1,
-                    symbol_color1,
-                    symbol_type2,
-                    symbol_color2,
-                }),
-                present: true,
-            }
-        } else {
-            CoatOfArms {
+impl From<query::SnapshotField<Option<coat_of_arms::CoatOfArms>>> for CoatOfArms {
+    fn from(value: query::SnapshotField<Option<coat_of_arms::CoatOfArms>>) -> Self {
+        match value {
+            query::SnapshotField::None => CoatOfArms {
                 value: None,
-                present: true,
+                present: false,
+            },
+            query::SnapshotField::Some(coat_of_arms) => {
+                let wrapper = coat_of_arms.map(
+                    |coat_of_arms::CoatOfArms {
+                         bg_type,
+                         bg_color1,
+                         bg_color2,
+                         symbol_pos_type,
+                         symbol_type1,
+                         symbol_color1,
+                         symbol_type2,
+                         symbol_color2,
+                     }| CoatOfArmsWrapper {
+                        bg_type,
+                        bg_color1,
+                        bg_color2,
+                        symbol_pos_type,
+                        symbol_type1,
+                        symbol_color1,
+                        symbol_type2,
+                        symbol_color2,
+                    },
+                );
+                CoatOfArms {
+                    value: wrapper,
+                    present: true,
+                }
             }
         }
     }
 }
 
 #[wasm_bindgen]
-#[derive(Default)]
 pub struct Snapshot {
     #[wasm_bindgen(getter_with_clone)]
     pub header: Header,
@@ -217,92 +244,62 @@ pub struct Snapshot {
     pub faction_special_camp_id: I64,
 }
 
-impl Snapshot {
-    pub fn new() -> Self {
-        Self::default()
-    }
+impl From<query::Snapshot> for Snapshot {
+    fn from(value: query::Snapshot) -> Self {
+        let query::Snapshot {
+            header,
+            timestamp,
+            basic_name,
+            basic_level,
+            basic_legendary_level,
+            basic_might,
+            basic_honor,
+            basic_achievement,
+            basic_glory,
+            basic_ruins,
+            alliance_id,
+            alliance_name,
+            alliance_rank_id,
+            alliance_searching,
+            timer_protection_time,
+            timer_relocate_time,
+            locations,
+            coat_of_arms,
+            faction_id,
+            faction_title_id,
+            faction_self_protection_time,
+            faction_group_protection_status,
+            faction_group_protection_time,
+            faction_main_camp_id,
+            faction_special_camp_id,
+        } = value;
 
-    pub fn set(&mut self, field: Field, data: SnapshotData) -> Result<(), ()> {
-        match (field, data) {
-            (Field::Header, SnapshotData::Header(header)) => self.header = Header::new(header),
-            (Field::Timestamp, SnapshotData::Timestamp(timestamp)) => {
-                self.timestamp = I64::new(Some(timestamp));
-            }
-            (Field::Basic(BasicField::Name), SnapshotData::String(name)) => {
-                self.basic_name = OptionalString::new(name);
-            }
-            (Field::Basic(BasicField::Level), SnapshotData::I64(level)) => {
-                self.basic_level = I64::new(level);
-            }
-            (Field::Basic(BasicField::LegendaryLevel), SnapshotData::I64(level)) => {
-                self.basic_legendary_level = I64::new(level);
-            }
-            (Field::Basic(BasicField::Might), SnapshotData::I64(might)) => {
-                self.basic_might = I64::new(might);
-            }
-            (Field::Basic(BasicField::Honor), SnapshotData::I64(honor)) => {
-                self.basic_honor = I64::new(honor);
-            }
-            (Field::Basic(BasicField::Achievement), SnapshotData::I64(achievement)) => {
-                self.basic_achievement = I64::new(achievement);
-            }
-            (Field::Basic(BasicField::Glory), SnapshotData::I64(glory)) => {
-                self.basic_glory = I64::new(glory);
-            }
-            (Field::Basic(BasicField::Ruins), SnapshotData::I64(ruins)) => {
-                self.basic_ruins = I64::new(ruins);
-            }
-            (Field::Alliance(AllianceField::Id), SnapshotData::I64(id)) => {
-                self.alliance_id = I64::new(id);
-            }
-            (Field::Alliance(AllianceField::Name), SnapshotData::String(name)) => {
-                self.alliance_name = OptionalString::new(name);
-            }
-            (Field::Alliance(AllianceField::RankId), SnapshotData::I64(rank_id)) => {
-                self.alliance_rank_id = I64::new(rank_id);
-            }
-            (Field::Alliance(AllianceField::Searching), SnapshotData::I64(searching)) => {
-                self.alliance_searching = I64::new(searching);
-            }
-            (Field::Timer(TimerField::ProtectionTime), SnapshotData::I64(protection_time)) => {
-                self.timer_protection_time = I64::new(protection_time);
-            }
-            (Field::Timer(TimerField::RelocateTime), SnapshotData::I64(relocate_time)) => {
-                self.timer_relocate_time = I64::new(relocate_time);
-            }
-            (Field::Location, SnapshotData::Locations(locations)) => {
-                self.locations = Locations::new(locations);
-            }
-            (Field::CoatOfArms, SnapshotData::CoatOfArms(coat_of_arms)) => {
-                self.coat_of_arms = CoatOfArms::new(coat_of_arms);
-            }
-            (Field::Faction(FactionField::FactionId), SnapshotData::I64(faction_id)) => {
-                self.faction_id = I64::new(faction_id);
-            }
-            (Field::Faction(FactionField::TitleId), SnapshotData::I64(title_id)) => {
-                self.faction_title_id = I64::new(title_id);
-            }
-            (
-                Field::Faction(FactionField::SelfProtectionTime),
-                SnapshotData::I64(self_protection_time),
-            ) => self.faction_self_protection_time = I64::new(self_protection_time),
-            (
-                Field::Faction(FactionField::GroupProtectionStatus),
-                SnapshotData::I64(group_protection_status),
-            ) => self.faction_group_protection_status = I64::new(group_protection_status),
-            (
-                Field::Faction(FactionField::GroupProtectionTime),
-                SnapshotData::I64(group_protection_time),
-            ) => self.faction_group_protection_time = I64::new(group_protection_time),
-            (Field::Faction(FactionField::MainCampId), SnapshotData::I64(main_camp_id)) => {
-                self.faction_main_camp_id = I64::new(main_camp_id);
-            }
-            (Field::Faction(FactionField::SpecialCampId), SnapshotData::I64(special_camp_id)) => {
-                self.faction_special_camp_id = I64::new(special_camp_id);
-            }
-
-            _ => return Err(()),
+        Snapshot {
+            header: header.into(),
+            timestamp: timestamp.into(),
+            basic_name: basic_name.into(),
+            basic_level: basic_level.into(),
+            basic_legendary_level: basic_legendary_level.into(),
+            basic_might: basic_might.into(),
+            basic_honor: basic_honor.into(),
+            basic_achievement: basic_achievement.into(),
+            basic_glory: basic_glory.into(),
+            basic_ruins: basic_ruins.into(),
+            alliance_id: alliance_id.into(),
+            alliance_name: alliance_name.into(),
+            alliance_rank_id: alliance_rank_id.into(),
+            alliance_searching: alliance_searching.into(),
+            timer_protection_time: timer_protection_time.into(),
+            timer_relocate_time: timer_relocate_time.into(),
+            locations: locations.into(),
+            coat_of_arms: coat_of_arms.into(),
+            faction_id: faction_id.into(),
+            faction_title_id: faction_title_id.into(),
+            faction_self_protection_time: faction_self_protection_time.into(),
+            faction_group_protection_status: faction_group_protection_status.into(),
+            faction_group_protection_time: faction_group_protection_time.into(),
+            faction_main_camp_id: faction_main_camp_id.into(),
+            faction_special_camp_id: faction_special_camp_id.into(),
         }
-        Ok(())
     }
 }
