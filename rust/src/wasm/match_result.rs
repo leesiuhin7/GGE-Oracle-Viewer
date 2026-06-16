@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-use crate::data::filter::{Interval, IntervalSet};
+use crate::filter::{Interval, IntervalSet};
 
 #[wasm_bindgen]
 pub struct SnapshotInfo {

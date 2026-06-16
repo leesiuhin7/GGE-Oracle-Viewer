@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-use crate::data::filter::field_filters::{
+use crate::filter::field_filters::{
     AllianceIdFilter, AllianceNameFilter, AllianceRankIdFilter, AllianceSearchingFilter,
     BasicAchievementFilter, BasicGloryFilter, BasicHonorFilter, BasicLegendaryLevelFilter,
     BasicLevelFilter, BasicMightFilter, BasicNameFilter, BasicRuinsFilter, FactionFactionIdFilter,

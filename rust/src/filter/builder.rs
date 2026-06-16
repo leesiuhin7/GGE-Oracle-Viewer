@@ -1,10 +1,12 @@
-use crate::data::{
-    block::{AllianceField, BasicField, Data, FactionField, Field, TimerField},
+use crate::{
+    data::{
+        block::{AllianceField, BasicField, Data, FactionField, Field, TimerField},
+        structures::{delta_rle, rle},
+    },
     filter::{
         Filter, Interval, IntervalSet,
         field_filters::{FieldFilter, Predicate},
     },
-    structures::{delta_rle, rle},
 };
 
 fn filter_timestamps<F: Fn(i64) -> bool>(timestamp_deltas: Vec<i64>, predicate: F) -> IntervalSet {

@@ -1,5 +1,5 @@
 use crate::data::block::{Block, Data, Error, Field};
-pub use crate::data::filter::{
+pub use crate::filter::{
     builder::build_filter,
     expr::Expr,
     interval::{Interval, IntervalSet},

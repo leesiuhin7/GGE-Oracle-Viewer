@@ -1,6 +1,5 @@
-use crate::data::{
-    Block,
-    block::Error,
+use crate::{
+    data::{Block, block::Error},
     filter::{
         Filter, IntervalSet,
         interval::{intersect_interval_sets, interval_sets_union},
