@@ -1,4 +1,4 @@
-pub use crate::data::{block::Block, filter::Engine, layout::Layout, reader::BlockReader};
+pub use crate::data::{block::Block, filter::Expr, layout::Layout, reader::BlockReader};
 
 pub mod block;
 pub mod filter;

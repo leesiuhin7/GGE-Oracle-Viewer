@@ -1,4 +1,5 @@
 mod engine;
+mod expr_wrapper;
 mod fields;
 mod file_wrapper;
 mod filter_wrapper;

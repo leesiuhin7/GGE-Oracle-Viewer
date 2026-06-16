@@ -1,11 +1,11 @@
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    data::{BlockReader, Engine as FilterEngine, filter::build_filter},
+    data::BlockReader,
     wasm::{
+        expr_wrapper::Expr,
         fields::WrapperField,
         file_wrapper::{FileReader, FileWrapper, SyncFile},
-        filter_wrapper::Filter,
         layout::LayoutWrapper,
         match_result::{MatchResult, SnapshotInfo},
         snapshot::SnapshotBuilder,
@@ -16,7 +16,6 @@ use crate::{
 #[wasm_bindgen]
 pub struct Engine {
     block_reader: BlockReader<FileReader>,
-    filter_engine: FilterEngine,
 }
 
 #[wasm_bindgen]
@@ -26,21 +25,12 @@ impl Engine {
         let reader = FileReader::new(FileWrapper::new(sync_file));
         Engine {
             block_reader: BlockReader::new(reader, layout_wrapper.into_layout()),
-            filter_engine: FilterEngine::new(),
         }
     }
 
-    pub fn push_filter(&mut self, filter: Filter) -> u32 {
-        self.filter_engine
-            .storage_mut()
-            .push(build_filter(filter.into()))
-    }
+    pub fn match_all(&mut self, expr: Expr) -> MatchResult {
+        let filter_expr = expr.into_expr();
 
-    pub fn remove_filter(&mut self, id: u32) -> bool {
-        self.filter_engine.storage_mut().remove(id).is_some()
-    }
-
-    pub fn match_all(&mut self) -> MatchResult {
         let mut result = MatchResult::new();
 
         for (block_id, interval_set) in self
@@ -48,7 +38,7 @@ impl Engine {
             .blocks()
             // Map blocks to intervals
             .map(|block| match block {
-                Ok(mut b) => self.filter_engine.apply_filters(&mut b).ok(),
+                Ok(mut b) => filter_expr.eval(&mut b).ok(),
                 Err(_) => None,
             })
             // Assign id to each block
