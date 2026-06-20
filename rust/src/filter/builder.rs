@@ -9,18 +9,14 @@ use crate::{
     },
 };
 
-fn filter_timestamps<F: Fn(i64) -> bool>(timestamp_deltas: Vec<i64>, predicate: F) -> IntervalSet {
+fn filter_timestamps<F: Fn(i64) -> bool>(timestamps: Vec<i64>, predicate: F) -> IntervalSet {
     let mut interval_set = Vec::new();
 
     let mut start: Option<u32> = None;
     let mut end: u32 = 0;
-    let mut accumulator: i64 = 0;
 
-    for delta in timestamp_deltas {
-        accumulator += delta;
-        let result = predicate(accumulator);
-
-        match (result, start) {
+    for timestamp in timestamps {
+        match (predicate(timestamp), start) {
             (true, None) => start = Some(end),
             (false, Some(s)) => {
                 if let Ok(interval) = Interval::new(s, end) {
@@ -28,7 +24,6 @@ fn filter_timestamps<F: Fn(i64) -> bool>(timestamp_deltas: Vec<i64>, predicate: 
                 }
                 start = None;
             }
-
             _ => {}
         }
         end += 1;
@@ -141,10 +136,10 @@ pub fn build_filter(filter_field: FieldFilter) -> Filter {
             Filter::new(
                 Field::Timestamp,
                 Box::new(move |data| {
-                    let Data::Timestamps(timestamp_deltas) = data else {
+                    let Data::Timestamps(timestamps) = data else {
                         panic!();
                     };
-                    filter_timestamps(timestamp_deltas, &predicate)
+                    filter_timestamps(timestamps, &predicate)
                 }),
             )
         }
