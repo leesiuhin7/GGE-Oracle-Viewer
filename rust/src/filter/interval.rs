@@ -89,34 +89,29 @@ pub(super) fn intersect_interval_sets(mut interval_sets: Vec<IntervalSet>) -> In
     interval_set
 }
 
-fn interval_set_union(interval_set: IntervalSet) -> IntervalSet {
-    let mut result: IntervalSet = Vec::new();
+fn interval_set_union(intervals: Vec<Interval>) -> IntervalSet {
+    let mut result = Vec::new();
 
-    let mut new = true;
-    let mut start = 0;
-    let mut end = 0;
-
-    for interval in interval_set {
-        if new {
-            Interval { start, end } = interval;
-            new = false;
-        } else if end < interval.start {
+    let Some(&Interval { mut start, mut end }) = intervals.last() else {
+        // Immediately return if intervals is empty
+        return result;
+    };
+    // Skipping 1 as the first interval had already been stored
+    for interval in intervals.into_iter().skip(1) {
+        if end < interval.start {
             // Intervals are disjoint
             if let Ok(out_interval) = Interval::new(start, end) {
                 result.push(out_interval);
             }
-            new = true;
+            Interval { start, end } = interval;
         } else {
-            // Merge intervals
             end = end.max(interval.end);
         }
     }
-
-    // Push the remaining interval if haven't already
-    if !new && let Ok(out_interval) = Interval::new(start, end) {
+    // Push the final interval as it haven't been
+    if let Ok(out_interval) = Interval::new(start, end) {
         result.push(out_interval);
     }
-
     result
 }
 
