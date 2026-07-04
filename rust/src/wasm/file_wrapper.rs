@@ -59,6 +59,7 @@ impl Read for FileWrapper {
 impl Write for FileWrapper {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
         let size = self.sync_file.write(buf, self.pointer);
+        self.pointer += size;
         Ok(usize::try_from(size).unwrap())
     }
 
