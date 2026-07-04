@@ -23,7 +23,7 @@ export class SyncFile {
     this.handle.truncate(Number(size));
   }
 
-  write(buffer: Uint8Array, offset: bigint): number {
-    return this.handle.write(buffer, { at: Number(offset) });
+  write(buffer: Uint8Array, offset: bigint): bigint {
+    return BigInt(this.handle.write(buffer, { at: Number(offset) }));
   }
 }
