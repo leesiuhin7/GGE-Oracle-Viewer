@@ -8,7 +8,7 @@ use crate::{
         fields::WrapperField,
         file_wrapper::{FileReader, FileWrapper, SyncFile},
         layout::LayoutWrapper,
-        match_result::{MatchResult, SnapshotInfo},
+        result::{MatchResult, SnapshotInfo},
         snapshot_data::Snapshot,
     },
 };

@@ -5,5 +5,5 @@ mod fields;
 mod file_wrapper;
 mod filter_wrapper;
 mod layout;
-mod match_result;
+mod result;
 mod snapshot_data;
