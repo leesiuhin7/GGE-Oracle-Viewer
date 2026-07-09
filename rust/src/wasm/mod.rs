@@ -1,5 +1,6 @@
 mod comparator;
 mod engine;
+mod engine_factory;
 mod expr_wrapper;
 mod fields;
 mod file_wrapper;
