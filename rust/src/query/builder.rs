@@ -94,11 +94,11 @@ impl<'a> SnapshotBuilder<'a> {
     pub(super) fn build_snapshot(
         &mut self,
         snapshot_id: u32,
-        fields: Vec<Field>,
+        fields: &[Field],
     ) -> Option<Snapshot> {
         let mut snapshot = Snapshot::new();
         for field in fields {
-            let Ok(data) = self.block.read_field(&field) else {
+            let Ok(data) = self.block.read_field(field) else {
                 return None;
             };
             let snapshot_data = resolve_field(data, snapshot_id)?;

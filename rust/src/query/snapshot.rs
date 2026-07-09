@@ -53,7 +53,7 @@ impl Snapshot {
         Self::default()
     }
 
-    pub(super) fn set(&mut self, field: Field, data: SnapshotData) -> Result<(), ()> {
+    pub(super) fn set(&mut self, field: &Field, data: SnapshotData) -> Result<(), ()> {
         match (field, data) {
             (Field::Header, SnapshotData::Header(header)) => {
                 self.header = SnapshotField::Some(header);

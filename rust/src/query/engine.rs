@@ -42,7 +42,7 @@ impl<R: Read + Seek> Engine<R> {
     pub fn build_snapshot(
         &mut self,
         snapshot_info: &SnapshotInfo,
-        fields: Vec<Field>,
+        fields: &[Field],
     ) -> Option<Snapshot> {
         let &SnapshotInfo {
             block_id,

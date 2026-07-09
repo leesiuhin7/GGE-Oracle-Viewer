@@ -29,31 +29,30 @@ impl MatchResult {
     }
 
     pub fn get(&self, skip: usize, take: usize) -> Vec<SnapshotInfo> {
-        self.interval_sets
-            .iter()
-            .flat_map(
-                |BlockIntervalSet {
-                     block_id,
-                     interval_set,
-                 }| {
-                    interval_set
-                        .iter()
-                        .filter_map(|&Interval { start, end }| {
-                            let block_id = *block_id;
-                            if start == 0 && end == u32::MAX {
-                                None
-                            } else {
-                                Some((start..end).map(move |snapshot_id| SnapshotInfo {
-                                    block_id,
-                                    snapshot_id,
-                                }))
-                            }
-                        })
-                        .flatten()
-                },
-            )
-            .skip(skip)
-            .take(take)
-            .collect()
+        self.iter().skip(skip).take(take).collect()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = SnapshotInfo> {
+        self.interval_sets.iter().flat_map(
+            |BlockIntervalSet {
+                 block_id,
+                 interval_set,
+             }| {
+                interval_set
+                    .iter()
+                    .filter_map(|&Interval { start, end }| {
+                        let block_id = *block_id;
+                        if start == 0 && end == u32::MAX {
+                            None
+                        } else {
+                            Some((start..end).map(move |snapshot_id| SnapshotInfo {
+                                block_id,
+                                snapshot_id,
+                            }))
+                        }
+                    })
+                    .flatten()
+            },
+        )
     }
 }

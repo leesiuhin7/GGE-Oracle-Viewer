@@ -40,7 +40,10 @@ impl Engine {
         self.0
             .build_snapshot(
                 &snapshot_info.into(),
-                fields.into_iter().map(std::convert::Into::into).collect(),
+                &fields
+                    .into_iter()
+                    .map(std::convert::Into::into)
+                    .collect::<Vec<_>>(),
             )
             .map(std::convert::Into::into)
     }
