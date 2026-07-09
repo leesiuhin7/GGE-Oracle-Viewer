@@ -102,7 +102,7 @@ pub enum Field {
 }
 
 impl Field {
-    fn as_usize(&self) -> usize {
+    pub(crate) fn as_usize(&self) -> usize {
         match self {
             Field::Header => 0,
             Field::Timestamp => 1,
