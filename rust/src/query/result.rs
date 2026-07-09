@@ -1,8 +1,8 @@
 use crate::filter::{Interval, IntervalSet};
 
 pub struct SnapshotInfo {
-    pub(super) block_id: usize,
-    pub(super) snapshot_id: u32,
+    pub(crate) block_id: usize,
+    pub(crate) snapshot_id: u32,
 }
 
 struct BlockIntervalSet {
