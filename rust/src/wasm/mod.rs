@@ -1,3 +1,4 @@
+mod comparator;
 mod engine;
 mod expr_wrapper;
 mod fields;
