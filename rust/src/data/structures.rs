@@ -10,26 +10,26 @@ pub mod rle {
 
     #[derive(Debug)]
     pub enum Error {
-        Varint(DecodeVarintError),
-        Io(std::io::Error),
-        ReadData(()),
+        Varint,
+        Io,
+        ReadData,
     }
 
     impl From<DecodeVarintError> for Error {
-        fn from(value: DecodeVarintError) -> Self {
-            Error::Varint(value)
+        fn from(_: DecodeVarintError) -> Self {
+            Error::Varint
         }
     }
 
     impl From<std::io::Error> for Error {
-        fn from(value: std::io::Error) -> Self {
-            Error::Io(value)
+        fn from(_: std::io::Error) -> Self {
+            Error::Io
         }
     }
 
     impl From<()> for Error {
         fn from((): ()) -> Self {
-            Error::ReadData(())
+            Error::ReadData
         }
     }
 
@@ -62,19 +62,19 @@ pub mod delta {
 
     #[derive(Debug)]
     pub enum Error {
-        Varint(DecodeVarintError),
-        Io(std::io::Error),
+        Varint,
+        Io,
     }
 
     impl From<DecodeVarintError> for Error {
-        fn from(value: DecodeVarintError) -> Self {
-            Error::Varint(value)
+        fn from(_: DecodeVarintError) -> Self {
+            Error::Varint
         }
     }
 
     impl From<std::io::Error> for Error {
-        fn from(value: std::io::Error) -> Self {
-            Error::Io(value)
+        fn from(_: std::io::Error) -> Self {
+            Error::Io
         }
     }
 
@@ -113,19 +113,19 @@ pub mod delta_rle {
 
     #[derive(Debug)]
     pub enum Error {
-        Varint(DecodeVarintError),
-        Io(std::io::Error),
+        Varint,
+        Io,
     }
 
     impl From<DecodeVarintError> for Error {
-        fn from(value: DecodeVarintError) -> Self {
-            Error::Varint(value)
+        fn from(_: DecodeVarintError) -> Self {
+            Error::Varint
         }
     }
 
     impl From<std::io::Error> for Error {
-        fn from(value: std::io::Error) -> Self {
-            Error::Io(value)
+        fn from(_: std::io::Error) -> Self {
+            Error::Io
         }
     }
 
@@ -158,20 +158,20 @@ pub mod header {
     }
 
     pub enum Error {
-        Varint(DecodeStringError),
-        Io(std::io::Error),
+        Varint,
+        Io,
         Server,
     }
 
     impl From<DecodeStringError> for Error {
-        fn from(value: DecodeStringError) -> Self {
-            Error::Varint(value)
+        fn from(_: DecodeStringError) -> Self {
+            Error::Varint
         }
     }
 
     impl From<std::io::Error> for Error {
-        fn from(value: std::io::Error) -> Self {
-            Error::Io(value)
+        fn from(_: std::io::Error) -> Self {
+            Error::Io
         }
     }
 
@@ -246,13 +246,13 @@ pub mod coat_of_arms {
     }
 
     pub enum Error {
-        Rle(rle::Error),
+        Rle,
         CoatOfArms,
     }
 
     impl From<rle::Error> for Error {
-        fn from(value: rle::Error) -> Self {
-            Error::Rle(value)
+        fn from(_: rle::Error) -> Self {
+            Error::Rle
         }
     }
 

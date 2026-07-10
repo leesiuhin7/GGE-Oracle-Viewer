@@ -57,7 +57,6 @@ fn resolve_timestamp(timestamps: &[i64], snapshot_id: u32) -> Option<i64> {
 fn resolve_field(data: Data, snapshot_id: u32) -> Option<SnapshotData> {
     match data {
         Data::Header(header) => Some(SnapshotData::Header(header)),
-        Data::Deltas(_) => unreachable!(),
         Data::Timestamps(timestamps) => Some(SnapshotData::Timestamp(resolve_timestamp(
             &timestamps,
             snapshot_id,

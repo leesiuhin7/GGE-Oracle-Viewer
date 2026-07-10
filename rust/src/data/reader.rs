@@ -10,19 +10,19 @@ use crate::data::{
 
 pub enum Error {
     InvalidIndex,
-    Io(std::io::Error),
-    OutOfRange(TryFromIntError),
+    Io,
+    OutOfRange,
 }
 
 impl From<std::io::Error> for Error {
-    fn from(value: std::io::Error) -> Self {
-        Error::Io(value)
+    fn from(_: std::io::Error) -> Self {
+        Error::Io
     }
 }
 
 impl From<TryFromIntError> for Error {
-    fn from(value: TryFromIntError) -> Self {
-        Error::OutOfRange(value)
+    fn from(_: TryFromIntError) -> Self {
+        Error::OutOfRange
     }
 }
 

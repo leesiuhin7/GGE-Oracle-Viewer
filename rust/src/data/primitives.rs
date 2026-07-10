@@ -8,21 +8,20 @@ fn decode_zigzag(value: u64) -> i64 {
     ((value >> 1) as i64) ^ -((value & 1) as i64)
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 pub enum DecodeVarintError {
-    Io(std::io::Error),
-    Size(String),
+    Io,
+    Size,
 }
 
 impl From<std::io::Error> for DecodeVarintError {
-    fn from(value: std::io::Error) -> Self {
-        DecodeVarintError::Io(value)
+    fn from(_: std::io::Error) -> Self {
+        DecodeVarintError::Io
     }
 }
 impl From<String> for DecodeVarintError {
-    fn from(value: String) -> Self {
-        DecodeVarintError::Size(value)
+    fn from(_: String) -> Self {
+        DecodeVarintError::Size
     }
 }
 
@@ -70,26 +69,26 @@ pub(super) fn decode_varint_optional_i64(
 }
 
 pub enum DecodeStringError {
-    Varint(DecodeVarintError),
-    Io(std::io::Error),
-    String(FromUtf8Error),
+    Varint,
+    Io,
+    String,
 }
 
 impl From<DecodeVarintError> for DecodeStringError {
-    fn from(value: DecodeVarintError) -> Self {
-        DecodeStringError::Varint(value)
+    fn from(_: DecodeVarintError) -> Self {
+        DecodeStringError::Varint
     }
 }
 
 impl From<std::io::Error> for DecodeStringError {
-    fn from(value: std::io::Error) -> Self {
-        DecodeStringError::Io(value)
+    fn from(_: std::io::Error) -> Self {
+        DecodeStringError::Io
     }
 }
 
 impl From<FromUtf8Error> for DecodeStringError {
-    fn from(value: FromUtf8Error) -> Self {
-        DecodeStringError::String(value)
+    fn from(_: FromUtf8Error) -> Self {
+        DecodeStringError::String
     }
 }
 
@@ -123,7 +122,7 @@ pub(super) fn decode_optional_varint_array(
                 let result = decode_varint_i64(&mut cursor);
                 match result {
                     Ok(value) => array.push(value),
-                    Err(DecodeVarintError::Io(_)) => return Ok(Some(array)),
+                    Err(DecodeVarintError::Io) => return Ok(Some(array)),
                     Err(error) => return Err(error),
                 }
             }

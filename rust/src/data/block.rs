@@ -8,7 +8,6 @@ use super::structures::{coat_of_arms, delta, delta_rle, header, locations, rle};
 
 pub enum Data {
     Header(header::Header),
-    Deltas(Vec<Option<i64>>),
     Timestamps(Vec<i64>),
     RleDelta(Vec<delta_rle::Run>),
     RleI64(Vec<rle::Run<Option<i64>>>),
@@ -18,41 +17,40 @@ pub enum Data {
 }
 
 pub enum Error {
-    FieldOutOfRange,
-    Header(header::Error),
-    Rle(rle::Error),
-    Delta(delta::Error),
-    DeltaRle(delta_rle::Error),
-    CoatOfArms(coat_of_arms::Error),
+    Header,
+    Rle,
+    Delta,
+    DeltaRle,
+    CoatOfArms,
     BadTimestamp,
 }
 
 impl From<header::Error> for Error {
-    fn from(value: header::Error) -> Self {
-        Error::Header(value)
+    fn from(_: header::Error) -> Self {
+        Error::Header
     }
 }
 
 impl From<rle::Error> for Error {
-    fn from(value: rle::Error) -> Self {
-        Error::Rle(value)
+    fn from(_: rle::Error) -> Self {
+        Error::Rle
     }
 }
 
 impl From<delta::Error> for Error {
-    fn from(value: delta::Error) -> Self {
-        Error::Delta(value)
+    fn from(_: delta::Error) -> Self {
+        Error::Delta
     }
 }
 
 impl From<delta_rle::Error> for Error {
-    fn from(value: delta_rle::Error) -> Self {
-        Error::DeltaRle(value)
+    fn from(_: delta_rle::Error) -> Self {
+        Error::DeltaRle
     }
 }
 impl From<coat_of_arms::Error> for Error {
-    fn from(value: coat_of_arms::Error) -> Self {
-        Error::CoatOfArms(value)
+    fn from(_: coat_of_arms::Error) -> Self {
+        Error::CoatOfArms
     }
 }
 

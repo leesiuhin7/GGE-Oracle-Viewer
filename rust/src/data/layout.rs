@@ -26,33 +26,33 @@ impl BlockLayout {
 }
 
 pub enum Error {
-    Io(std::io::Error),
-    String(DecodeStringError),
-    Varint(DecodeVarintError),
-    OutOfRange(TryFromIntError),
+    Io,
+    String,
+    Varint,
+    OutOfRange,
 }
 
 impl From<std::io::Error> for Error {
-    fn from(value: std::io::Error) -> Self {
-        Error::Io(value)
+    fn from(_: std::io::Error) -> Self {
+        Error::Io
     }
 }
 
 impl From<DecodeStringError> for Error {
-    fn from(value: DecodeStringError) -> Self {
-        Error::String(value)
+    fn from(_: DecodeStringError) -> Self {
+        Error::String
     }
 }
 
 impl From<DecodeVarintError> for Error {
-    fn from(value: DecodeVarintError) -> Self {
-        Error::Varint(value)
+    fn from(_: DecodeVarintError) -> Self {
+        Error::Varint
     }
 }
 
 impl From<TryFromIntError> for Error {
-    fn from(value: TryFromIntError) -> Self {
-        Error::OutOfRange(value)
+    fn from(_: TryFromIntError) -> Self {
+        Error::OutOfRange
     }
 }
 
