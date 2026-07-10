@@ -257,7 +257,7 @@ pub mod coat_of_arms {
     }
 
     impl From<()> for Error {
-        fn from(_: ()) -> Self {
+        fn from((): ()) -> Self {
             Error::CoatOfArms
         }
     }
@@ -291,7 +291,7 @@ pub mod coat_of_arms {
             let coat_of_arms = if let Some(array) = value {
                 match unpack_coat_of_arms(&array) {
                     Ok(coat_of_arms) => Some(coat_of_arms),
-                    Err(_) => return Err(()),
+                    Err(()) => return Err(()),
                 }
             } else {
                 None

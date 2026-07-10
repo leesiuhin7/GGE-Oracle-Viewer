@@ -61,12 +61,6 @@ pub struct Layout {
 }
 
 impl Layout {
-    pub fn new() -> Self {
-        Layout {
-            block_layouts: Vec::new(),
-        }
-    }
-
     pub fn from_data(reader: &mut (impl Read + Seek)) -> Result<Self, Error> {
         let mut block_layouts = Vec::new();
         loop {
@@ -75,7 +69,7 @@ impl Layout {
 
             // Skip size header
             match skip_varint(reader) {
-                Ok(_) => (),
+                Ok(()) => (),
                 Err(error) => match error.kind() {
                     // EOF, exit
                     ErrorKind::UnexpectedEof => break,

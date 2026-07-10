@@ -57,10 +57,6 @@ impl<R: Read + Seek> BlockReader<R> {
         BlockReader { reader, layout }
     }
 
-    pub fn layout(&self) -> &Layout {
-        &self.layout
-    }
-
     pub fn get_block(&mut self, index: usize) -> Result<Block<'_>, Error> {
         let layout = self
             .layout

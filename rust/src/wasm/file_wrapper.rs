@@ -35,6 +35,7 @@ impl FileWrapper {
         }
     }
 
+    #[allow(dead_code)] // Keeping this to mirror interface
     pub(super) fn close(self) {
         self.sync_file.close();
     }

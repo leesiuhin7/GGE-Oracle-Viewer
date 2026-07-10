@@ -345,8 +345,10 @@ pub enum FieldFilter {
     TimerProtectionTime(TimerProtectionTimeFilter),
     TimerRelocateTime(TimerRelocateTimeFilter),
     // Locations
+    #[allow(dead_code)] // Not yet implemented
     Location(LocationFilter),
     // Coat of arms
+    #[allow(dead_code)] // Not yet implemented
     CoatOfArms(CoatOfArmsFilter),
     // Faction
     FactionFactionId(FactionFactionIdFilter),
