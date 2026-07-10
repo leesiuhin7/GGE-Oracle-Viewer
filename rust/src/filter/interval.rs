@@ -1,8 +1,8 @@
 use std::{cmp::Reverse, collections::BinaryHeap};
 
-pub struct Interval {
-    pub start: u32,
-    pub end: u32,
+pub(crate) struct Interval {
+    pub(crate) start: u32,
+    pub(crate) end: u32,
 }
 
 impl Interval {
@@ -37,7 +37,7 @@ impl Ord for IntervalByEnd {
     }
 }
 
-pub type IntervalSet = Vec<Interval>;
+pub(crate) type IntervalSet = Vec<Interval>;
 
 fn intersect_intervals(intervals: &[&Interval]) -> Option<Interval> {
     let Interval { start, end: _ } = intervals

@@ -113,7 +113,7 @@ fn filter_rle<T, F: Fn(T) -> bool>(rle_data: Vec<rle::Run<T>>, predicate: F) -> 
 }
 
 #[allow(clippy::too_many_lines)]
-pub fn build_filter(filter_field: FieldFilter) -> Filter {
+pub(crate) fn build_filter(filter_field: FieldFilter) -> Filter {
     match filter_field {
         FieldFilter::Header(filter) => {
             let predicate = move |value| filter.test(value);

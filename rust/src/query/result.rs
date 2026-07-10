@@ -1,6 +1,6 @@
 use crate::filter::{Interval, IntervalSet};
 
-pub struct SnapshotInfo {
+pub(crate) struct SnapshotInfo {
     pub(crate) block_id: usize,
     pub(crate) snapshot_id: u32,
 }
@@ -10,7 +10,7 @@ struct BlockIntervalSet {
     interval_set: IntervalSet,
 }
 
-pub struct MatchResult {
+pub(crate) struct MatchResult {
     interval_sets: Vec<BlockIntervalSet>,
 }
 
@@ -28,11 +28,11 @@ impl MatchResult {
         });
     }
 
-    pub fn get(&self, skip: usize, take: usize) -> Vec<SnapshotInfo> {
+    pub(crate) fn get(&self, skip: usize, take: usize) -> Vec<SnapshotInfo> {
         self.iter().skip(skip).take(take).collect()
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = SnapshotInfo> {
+    pub(crate) fn iter(&self) -> impl Iterator<Item = SnapshotInfo> {
         self.interval_sets.iter().flat_map(
             |BlockIntervalSet {
                  block_id,

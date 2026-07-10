@@ -6,14 +6,14 @@ use crate::{
     },
 };
 
-pub enum Expr {
+pub(crate) enum Expr {
     And(Vec<Expr>),
     Or(Vec<Expr>),
     Filter(Filter),
 }
 
 impl Expr {
-    pub fn eval(&self, block: &mut Block) -> Result<IntervalSet, Error> {
+    pub(crate) fn eval(&self, block: &mut Block) -> Result<IntervalSet, Error> {
         match self {
             Expr::And(exprs) => Ok(intersect_interval_sets(
                 exprs

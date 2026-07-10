@@ -1,7 +1,7 @@
-pub use crate::data::{block::Block, layout::Layout, reader::BlockReader};
+pub(crate) use crate::data::{block::Block, layout::Layout, reader::BlockReader};
 
-pub mod block;
-pub mod layout;
-pub mod primitives;
-pub mod reader;
-pub mod structures;
+pub(crate) mod block;
+pub(crate) mod layout;
+pub(crate) mod primitives;
+pub(crate) mod reader;
+pub(crate) mod structures;

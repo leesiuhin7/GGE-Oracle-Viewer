@@ -38,7 +38,7 @@ macro_rules! impl_string_predicate {
     };
 }
 
-pub enum HeaderFilter {
+pub(crate) enum HeaderFilter {
     IdEq(u32),
     IdNe(u32),
     IdLt(u32),
@@ -67,7 +67,7 @@ impl Predicate<Header> for HeaderFilter {
     }
 }
 
-pub enum TimestampFilter {
+pub(crate) enum TimestampFilter {
     Eq(i64),
     Ne(i64),
     Lt(i64),
@@ -91,7 +91,7 @@ impl Predicate<i64> for TimestampFilter {
     }
 }
 
-pub enum BasicNameFilter {
+pub(crate) enum BasicNameFilter {
     Eq(Option<String>),
     Ne(Option<String>),
     Prefix(String),
@@ -100,7 +100,7 @@ pub enum BasicNameFilter {
 }
 impl_string_predicate!(BasicNameFilter);
 
-pub enum BasicLevelFilter {
+pub(crate) enum BasicLevelFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -111,7 +111,7 @@ pub enum BasicLevelFilter {
 }
 impl_numeric_predicate!(BasicLevelFilter);
 
-pub enum BasicLegendaryLevelFilter {
+pub(crate) enum BasicLegendaryLevelFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -122,7 +122,7 @@ pub enum BasicLegendaryLevelFilter {
 }
 impl_numeric_predicate!(BasicLegendaryLevelFilter);
 
-pub enum BasicMightFilter {
+pub(crate) enum BasicMightFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -133,7 +133,7 @@ pub enum BasicMightFilter {
 }
 impl_numeric_predicate!(BasicMightFilter);
 
-pub enum BasicHonorFilter {
+pub(crate) enum BasicHonorFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -144,7 +144,7 @@ pub enum BasicHonorFilter {
 }
 impl_numeric_predicate!(BasicHonorFilter);
 
-pub enum BasicAchievementFilter {
+pub(crate) enum BasicAchievementFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -155,7 +155,7 @@ pub enum BasicAchievementFilter {
 }
 impl_numeric_predicate!(BasicAchievementFilter);
 
-pub enum BasicGloryFilter {
+pub(crate) enum BasicGloryFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -166,7 +166,7 @@ pub enum BasicGloryFilter {
 }
 impl_numeric_predicate!(BasicGloryFilter);
 
-pub enum BasicRuinsFilter {
+pub(crate) enum BasicRuinsFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -177,7 +177,7 @@ pub enum BasicRuinsFilter {
 }
 impl_numeric_predicate!(BasicRuinsFilter);
 
-pub enum AllianceIdFilter {
+pub(crate) enum AllianceIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -188,7 +188,7 @@ pub enum AllianceIdFilter {
 }
 impl_numeric_predicate!(AllianceIdFilter);
 
-pub enum AllianceNameFilter {
+pub(crate) enum AllianceNameFilter {
     Eq(Option<String>),
     Ne(Option<String>),
     Prefix(String),
@@ -197,7 +197,7 @@ pub enum AllianceNameFilter {
 }
 impl_string_predicate!(AllianceNameFilter);
 
-pub enum AllianceRankIdFilter {
+pub(crate) enum AllianceRankIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -208,7 +208,7 @@ pub enum AllianceRankIdFilter {
 }
 impl_numeric_predicate!(AllianceRankIdFilter);
 
-pub enum AllianceSearchingFilter {
+pub(crate) enum AllianceSearchingFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -219,7 +219,7 @@ pub enum AllianceSearchingFilter {
 }
 impl_numeric_predicate!(AllianceSearchingFilter);
 
-pub enum TimerProtectionTimeFilter {
+pub(crate) enum TimerProtectionTimeFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -230,7 +230,7 @@ pub enum TimerProtectionTimeFilter {
 }
 impl_numeric_predicate!(TimerProtectionTimeFilter);
 
-pub enum TimerRelocateTimeFilter {
+pub(crate) enum TimerRelocateTimeFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -241,11 +241,11 @@ pub enum TimerRelocateTimeFilter {
 }
 impl_numeric_predicate!(TimerRelocateTimeFilter);
 
-pub enum LocationFilter {}
+pub(crate) enum LocationFilter {}
 
-pub enum CoatOfArmsFilter {}
+pub(crate) enum CoatOfArmsFilter {}
 
-pub enum FactionFactionIdFilter {
+pub(crate) enum FactionFactionIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -256,7 +256,7 @@ pub enum FactionFactionIdFilter {
 }
 impl_numeric_predicate!(FactionFactionIdFilter);
 
-pub enum FactionTitleIdFilter {
+pub(crate) enum FactionTitleIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -267,7 +267,7 @@ pub enum FactionTitleIdFilter {
 }
 impl_numeric_predicate!(FactionTitleIdFilter);
 
-pub enum FactionSelfProtectionTimeFilter {
+pub(crate) enum FactionSelfProtectionTimeFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -278,7 +278,7 @@ pub enum FactionSelfProtectionTimeFilter {
 }
 impl_numeric_predicate!(FactionSelfProtectionTimeFilter);
 
-pub enum FactionGroupProtectionStatusFilter {
+pub(crate) enum FactionGroupProtectionStatusFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -289,7 +289,7 @@ pub enum FactionGroupProtectionStatusFilter {
 }
 impl_numeric_predicate!(FactionGroupProtectionStatusFilter);
 
-pub enum FactionGroupProtectionTimeFilter {
+pub(crate) enum FactionGroupProtectionTimeFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -300,7 +300,7 @@ pub enum FactionGroupProtectionTimeFilter {
 }
 impl_numeric_predicate!(FactionGroupProtectionTimeFilter);
 
-pub enum FactionMainCampIdFilter {
+pub(crate) enum FactionMainCampIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -311,7 +311,7 @@ pub enum FactionMainCampIdFilter {
 }
 impl_numeric_predicate!(FactionMainCampIdFilter);
 
-pub enum FactionSpecialCampIdFilter {
+pub(crate) enum FactionSpecialCampIdFilter {
     Eq(Option<i64>),
     Ne(Option<i64>),
     Lt(i64),
@@ -322,7 +322,7 @@ pub enum FactionSpecialCampIdFilter {
 }
 impl_numeric_predicate!(FactionSpecialCampIdFilter);
 
-pub enum FieldFilter {
+pub(crate) enum FieldFilter {
     // Header
     Header(HeaderFilter),
     // Timestamp

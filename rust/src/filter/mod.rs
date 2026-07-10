@@ -1,5 +1,5 @@
 use crate::data::block::{Block, Data, Error, Field};
-pub use crate::filter::{
+pub(crate) use crate::filter::{
     builder::build_filter,
     expr::Expr,
     interval::{Interval, IntervalSet},
@@ -7,10 +7,10 @@ pub use crate::filter::{
 
 mod builder;
 mod expr;
-pub mod field_filters;
+pub(crate) mod field_filters;
 mod interval;
 
-pub struct Filter {
+pub(crate) struct Filter {
     field: Field,
     predicate: Box<dyn Fn(Data) -> IntervalSet>,
 }

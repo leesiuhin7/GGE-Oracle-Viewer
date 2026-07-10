@@ -25,7 +25,7 @@ impl BlockLayout {
     }
 }
 
-pub enum Error {
+pub(crate) enum Error {
     Io,
     String,
     Varint,
@@ -56,12 +56,12 @@ impl From<TryFromIntError> for Error {
     }
 }
 
-pub struct Layout {
+pub(crate) struct Layout {
     block_layouts: Vec<BlockLayout>,
 }
 
 impl Layout {
-    pub fn from_data(reader: &mut (impl Read + Seek)) -> Result<Self, Error> {
+    pub(crate) fn from_data(reader: &mut (impl Read + Seek)) -> Result<Self, Error> {
         let mut block_layouts = Vec::new();
         loop {
             let start = reader.stream_position()?;
@@ -100,7 +100,7 @@ impl Layout {
         Ok(Layout { block_layouts })
     }
 
-    pub fn from_reader(reader: &mut impl Read) -> Result<Self, std::io::Error> {
+    pub(crate) fn from_reader(reader: &mut impl Read) -> Result<Self, std::io::Error> {
         let mut block_layouts = Vec::new();
         loop {
             let mut pos_buffer = [0u8; 8];
@@ -128,7 +128,7 @@ impl Layout {
         Ok(Layout { block_layouts })
     }
 
-    pub fn to_writer(&self, writer: &mut impl Write) -> Result<(), std::io::Error> {
+    pub(crate) fn to_writer(&self, writer: &mut impl Write) -> Result<(), std::io::Error> {
         for layout in &self.block_layouts {
             writer.write_all(&u64::to_le_bytes(layout.position))?;
             for offset in layout.offsets {
@@ -138,7 +138,7 @@ impl Layout {
         Ok(())
     }
 
-    pub fn block_layouts(&self) -> &Vec<BlockLayout> {
+    pub(super) fn block_layouts(&self) -> &Vec<BlockLayout> {
         &self.block_layouts
     }
 }

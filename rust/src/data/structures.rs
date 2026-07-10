@@ -1,15 +1,15 @@
-pub mod rle {
+pub(crate) mod rle {
     use std::io::{Read, Seek};
 
     use super::super::primitives::{DecodeVarintError, decode_varint_u64, skip_varint};
 
-    pub struct Run<T> {
-        pub value: T,
-        pub count: u64,
+    pub(crate) struct Run<T> {
+        pub(crate) value: T,
+        pub(crate) count: u64,
     }
 
     #[derive(Debug)]
-    pub enum Error {
+    pub(in crate::data) enum Error {
         Varint,
         Io,
         ReadData,
@@ -55,13 +55,13 @@ pub mod rle {
     }
 }
 
-pub mod delta {
+pub(crate) mod delta {
     use std::io::{Read, Seek};
 
     use super::super::primitives::{DecodeVarintError, decode_varint_optional_i64, skip_varint};
 
     #[derive(Debug)]
-    pub enum Error {
+    pub(in crate::data) enum Error {
         Varint,
         Io,
     }
@@ -100,19 +100,19 @@ pub mod delta {
     }
 }
 
-pub mod delta_rle {
+pub(crate) mod delta_rle {
     use std::io::{Read, Seek};
 
     use super::super::primitives::{
         DecodeVarintError, decode_varint_optional_i64, decode_varint_u64, skip_varint,
     };
-    pub struct Run {
-        pub delta: Option<i64>,
-        pub count: u64,
+    pub(crate) struct Run {
+        pub(crate) delta: Option<i64>,
+        pub(crate) count: u64,
     }
 
     #[derive(Debug)]
-    pub enum Error {
+    pub(in crate::data) enum Error {
         Varint,
         Io,
     }
@@ -147,17 +147,17 @@ pub mod delta_rle {
     }
 }
 
-pub mod header {
+pub(crate) mod header {
     use std::io::{Read, Seek};
 
     use super::super::primitives::{DecodeStringError, decode_optional_string};
 
-    pub struct Header {
-        pub id: u32,
-        pub server: String,
+    pub(crate) struct Header {
+        pub(crate) id: u32,
+        pub(crate) server: String,
     }
 
-    pub enum Error {
+    pub(in crate::data) enum Error {
         Varint,
         Io,
         Server,
@@ -184,18 +184,18 @@ pub mod header {
     }
 }
 
-pub mod locations {
+pub(crate) mod locations {
     use std::io::{Read, Seek};
 
     use super::{super::primitives::decode_optional_varint_array, rle};
 
-    pub struct Location {
-        pub kingdom_id: i64,
-        pub id: i64,
-        pub x: i64,
-        pub y: i64,
+    pub(crate) struct Location {
+        pub(crate) kingdom_id: i64,
+        pub(crate) id: i64,
+        pub(crate) x: i64,
+        pub(crate) y: i64,
         #[allow(clippy::struct_field_names)]
-        pub location_type: i64,
+        pub(crate) location_type: i64,
     }
 
     fn unpack_locations(array: &[i64]) -> Vec<Location> {
@@ -229,23 +229,23 @@ pub mod locations {
     }
 }
 
-pub mod coat_of_arms {
+pub(crate) mod coat_of_arms {
     use std::io::{Read, Seek};
 
     use super::{super::primitives::decode_optional_varint_array, rle};
 
-    pub struct CoatOfArms {
-        pub bg_type: i64,
-        pub bg_color1: i64,
-        pub bg_color2: i64,
-        pub symbol_pos_type: i64,
-        pub symbol_type1: i64,
-        pub symbol_color1: i64,
-        pub symbol_type2: i64,
-        pub symbol_color2: i64,
+    pub(crate) struct CoatOfArms {
+        pub(crate) bg_type: i64,
+        pub(crate) bg_color1: i64,
+        pub(crate) bg_color2: i64,
+        pub(crate) symbol_pos_type: i64,
+        pub(crate) symbol_type1: i64,
+        pub(crate) symbol_color1: i64,
+        pub(crate) symbol_type2: i64,
+        pub(crate) symbol_color2: i64,
     }
 
-    pub enum Error {
+    pub(in crate::data) enum Error {
         Rle,
         CoatOfArms,
     }

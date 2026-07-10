@@ -6,7 +6,7 @@ use crate::data::primitives::decode_varint_optional_i64;
 use super::primitives::decode_optional_string;
 use super::structures::{coat_of_arms, delta, delta_rle, header, locations, rle};
 
-pub enum Data {
+pub(crate) enum Data {
     Header(header::Header),
     Timestamps(Vec<i64>),
     RleDelta(Vec<delta_rle::Run>),
@@ -16,7 +16,7 @@ pub enum Data {
     RleCoatOfArms(Vec<rle::Run<Option<coat_of_arms::CoatOfArms>>>),
 }
 
-pub enum Error {
+pub(crate) enum Error {
     Header,
     Rle,
     Delta,
@@ -54,7 +54,7 @@ impl From<coat_of_arms::Error> for Error {
     }
 }
 
-pub enum BasicField {
+pub(crate) enum BasicField {
     Name = 2,
     Level = 3,
     LegendaryLevel = 4,
@@ -65,19 +65,19 @@ pub enum BasicField {
     Ruins = 9,
 }
 
-pub enum AllianceField {
+pub(crate) enum AllianceField {
     Id = 10,
     Name = 11,
     RankId = 12,
     Searching = 13,
 }
 
-pub enum TimerField {
+pub(crate) enum TimerField {
     ProtectionTime = 14,
     RelocateTime = 15,
 }
 
-pub enum FactionField {
+pub(crate) enum FactionField {
     FactionId = 18,
     TitleId = 19,
     SelfProtectionTime = 20,
@@ -88,7 +88,7 @@ pub enum FactionField {
 }
 
 #[repr(usize)]
-pub enum Field {
+pub(crate) enum Field {
     Header = 0,
     Timestamp = 1,
     Basic(BasicField),
@@ -139,7 +139,7 @@ impl Field {
     }
 }
 
-pub struct Block<'a> {
+pub(crate) struct Block<'a> {
     cursor: Cursor<Box<[u8]>>,
     offsets: &'a [Offset],
 }
@@ -152,7 +152,7 @@ impl<'a> Block<'a> {
         }
     }
 
-    pub fn read_field(&mut self, field: &Field) -> Result<Data, Error> {
+    pub(crate) fn read_field(&mut self, field: &Field) -> Result<Data, Error> {
         let offset = self.offsets[field.as_usize()];
         let size = u64::from(self.offsets[field.as_usize() + 1] - offset);
 

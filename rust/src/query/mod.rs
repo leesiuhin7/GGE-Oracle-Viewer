@@ -1,4 +1,4 @@
-pub use crate::query::{
+pub(crate) use crate::query::{
     engine::Engine,
     result::{MatchResult, SnapshotInfo},
     snapshot::{Snapshot, SnapshotField},

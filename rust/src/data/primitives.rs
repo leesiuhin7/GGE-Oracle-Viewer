@@ -10,7 +10,7 @@ fn decode_zigzag(value: u64) -> i64 {
 }
 
 #[derive(Debug)]
-pub enum DecodeVarintError {
+pub(super) enum DecodeVarintError {
     Io,
     Size,
 }
@@ -69,7 +69,7 @@ pub(super) fn decode_varint_optional_i64(
     })
 }
 
-pub enum DecodeStringError {
+pub(super) enum DecodeStringError {
     Varint,
     Io,
     String,

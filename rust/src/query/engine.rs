@@ -10,16 +10,16 @@ use crate::{
     },
 };
 
-pub struct Engine<R: Read + Seek> {
+pub(crate) struct Engine<R: Read + Seek> {
     block_reader: BlockReader<R>,
 }
 
 impl<R: Read + Seek> Engine<R> {
-    pub fn new(block_reader: BlockReader<R>) -> Self {
+    pub(crate) fn new(block_reader: BlockReader<R>) -> Self {
         Engine { block_reader }
     }
 
-    pub fn match_all(&mut self, expr: &Expr) -> MatchResult {
+    pub(crate) fn match_all(&mut self, expr: &Expr) -> MatchResult {
         let mut result = MatchResult::new();
 
         for (block_id, interval_set) in self
@@ -39,7 +39,7 @@ impl<R: Read + Seek> Engine<R> {
         result
     }
 
-    pub fn build_snapshot(
+    pub(crate) fn build_snapshot(
         &mut self,
         snapshot_info: &SnapshotInfo,
         fields: &[Field],

@@ -13,39 +13,39 @@ pub(super) enum SnapshotData {
 }
 
 #[derive(Default)]
-pub enum SnapshotField<T> {
+pub(crate) enum SnapshotField<T> {
     #[default]
     None,
     Some(T),
 }
 
 #[derive(Default)]
-pub struct Snapshot {
-    pub header: SnapshotField<header::Header>,
-    pub timestamp: SnapshotField<i64>,
-    pub basic_name: SnapshotField<Option<String>>,
-    pub basic_level: SnapshotField<Option<i64>>,
-    pub basic_legendary_level: SnapshotField<Option<i64>>,
-    pub basic_might: SnapshotField<Option<i64>>,
-    pub basic_honor: SnapshotField<Option<i64>>,
-    pub basic_achievement: SnapshotField<Option<i64>>,
-    pub basic_glory: SnapshotField<Option<i64>>,
-    pub basic_ruins: SnapshotField<Option<i64>>,
-    pub alliance_id: SnapshotField<Option<i64>>,
-    pub alliance_name: SnapshotField<Option<String>>,
-    pub alliance_rank_id: SnapshotField<Option<i64>>,
-    pub alliance_searching: SnapshotField<Option<i64>>,
-    pub timer_protection_time: SnapshotField<Option<i64>>,
-    pub timer_relocate_time: SnapshotField<Option<i64>>,
-    pub locations: SnapshotField<Option<Vec<locations::Location>>>,
-    pub coat_of_arms: SnapshotField<Option<coat_of_arms::CoatOfArms>>,
-    pub faction_id: SnapshotField<Option<i64>>,
-    pub faction_title_id: SnapshotField<Option<i64>>,
-    pub faction_self_protection_time: SnapshotField<Option<i64>>,
-    pub faction_group_protection_status: SnapshotField<Option<i64>>,
-    pub faction_group_protection_time: SnapshotField<Option<i64>>,
-    pub faction_main_camp_id: SnapshotField<Option<i64>>,
-    pub faction_special_camp_id: SnapshotField<Option<i64>>,
+pub(crate) struct Snapshot {
+    pub(crate) header: SnapshotField<header::Header>,
+    pub(crate) timestamp: SnapshotField<i64>,
+    pub(crate) basic_name: SnapshotField<Option<String>>,
+    pub(crate) basic_level: SnapshotField<Option<i64>>,
+    pub(crate) basic_legendary_level: SnapshotField<Option<i64>>,
+    pub(crate) basic_might: SnapshotField<Option<i64>>,
+    pub(crate) basic_honor: SnapshotField<Option<i64>>,
+    pub(crate) basic_achievement: SnapshotField<Option<i64>>,
+    pub(crate) basic_glory: SnapshotField<Option<i64>>,
+    pub(crate) basic_ruins: SnapshotField<Option<i64>>,
+    pub(crate) alliance_id: SnapshotField<Option<i64>>,
+    pub(crate) alliance_name: SnapshotField<Option<String>>,
+    pub(crate) alliance_rank_id: SnapshotField<Option<i64>>,
+    pub(crate) alliance_searching: SnapshotField<Option<i64>>,
+    pub(crate) timer_protection_time: SnapshotField<Option<i64>>,
+    pub(crate) timer_relocate_time: SnapshotField<Option<i64>>,
+    pub(crate) locations: SnapshotField<Option<Vec<locations::Location>>>,
+    pub(crate) coat_of_arms: SnapshotField<Option<coat_of_arms::CoatOfArms>>,
+    pub(crate) faction_id: SnapshotField<Option<i64>>,
+    pub(crate) faction_title_id: SnapshotField<Option<i64>>,
+    pub(crate) faction_self_protection_time: SnapshotField<Option<i64>>,
+    pub(crate) faction_group_protection_status: SnapshotField<Option<i64>>,
+    pub(crate) faction_group_protection_time: SnapshotField<Option<i64>>,
+    pub(crate) faction_main_camp_id: SnapshotField<Option<i64>>,
+    pub(crate) faction_special_camp_id: SnapshotField<Option<i64>>,
 }
 
 impl Snapshot {

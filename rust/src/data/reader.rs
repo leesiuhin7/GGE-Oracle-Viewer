@@ -8,7 +8,7 @@ use crate::data::{
     layout::{BlockLayout, Layout},
 };
 
-pub enum Error {
+pub(crate) enum Error {
     InvalidIndex,
     Io,
     OutOfRange,
@@ -47,17 +47,17 @@ fn build_block<'a>(
     Ok(Block::new(bytes.into(), offsets))
 }
 
-pub struct BlockReader<R: Read + Seek> {
+pub(crate) struct BlockReader<R: Read + Seek> {
     reader: R,
     layout: Layout,
 }
 
 impl<R: Read + Seek> BlockReader<R> {
-    pub fn new(reader: R, layout: Layout) -> Self {
+    pub(crate) fn new(reader: R, layout: Layout) -> Self {
         BlockReader { reader, layout }
     }
 
-    pub fn get_block(&mut self, index: usize) -> Result<Block<'_>, Error> {
+    pub(crate) fn get_block(&mut self, index: usize) -> Result<Block<'_>, Error> {
         let layout = self
             .layout
             .block_layouts()
@@ -66,7 +66,7 @@ impl<R: Read + Seek> BlockReader<R> {
         build_block(&mut self.reader, layout)
     }
 
-    pub fn blocks(&mut self) -> impl Iterator<Item = Result<Block<'_>, Error>> {
+    pub(crate) fn blocks(&mut self) -> impl Iterator<Item = Result<Block<'_>, Error>> {
         let reader = &mut self.reader;
 
         self.layout
