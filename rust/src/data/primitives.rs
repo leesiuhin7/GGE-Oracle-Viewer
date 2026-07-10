@@ -1,5 +1,6 @@
 use std::{
     io::{Cursor, Read},
+    num::TryFromIntError,
     string::FromUtf8Error,
 };
 
@@ -72,6 +73,7 @@ pub enum DecodeStringError {
     Varint,
     Io,
     String,
+    OutOfRange,
 }
 
 impl From<DecodeVarintError> for DecodeStringError {
@@ -92,6 +94,12 @@ impl From<FromUtf8Error> for DecodeStringError {
     }
 }
 
+impl From<TryFromIntError> for DecodeStringError {
+    fn from(_: TryFromIntError) -> Self {
+        DecodeStringError::OutOfRange
+    }
+}
+
 pub(super) fn decode_optional_string(
     reader: &mut impl Read,
 ) -> Result<Option<String>, DecodeStringError> {
@@ -99,7 +107,7 @@ pub(super) fn decode_optional_string(
         0 => None,
         value => {
             let size = value - 1;
-            let mut buffer = vec![0u8; size as usize];
+            let mut buffer = vec![0u8; size.try_into()?];
             reader.read_exact(&mut buffer)?;
             Some(String::from_utf8(buffer)?)
         }
@@ -113,7 +121,7 @@ pub(super) fn decode_optional_varint_array(
         0 => Ok(None),
         value => {
             let size = value - 1;
-            let mut buffer = vec![0u8; size as usize];
+            let mut buffer = vec![0u8; size.try_into().map_err(|_| DecodeVarintError::Size)?];
             reader.read_exact(&mut buffer)?;
             let mut cursor = Cursor::new(buffer);
 
