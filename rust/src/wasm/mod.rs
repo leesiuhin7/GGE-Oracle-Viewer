@@ -1,4 +1,5 @@
 mod comparator;
+mod decompressor;
 mod engine;
 mod engine_factory;
 mod expr_wrapper;
