@@ -1,4 +1,4 @@
-export class SyncFile {
+export default class SyncFile {
   handle: FileSystemSyncAccessHandle;
 
   constructor(handle: FileSystemSyncAccessHandle) {

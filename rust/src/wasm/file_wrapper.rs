@@ -2,7 +2,7 @@ use std::io::{BufReader, BufWriter, IntoInnerError, Read, Seek, SeekFrom, Write}
 
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(module = "/../src/file.ts")]
+#[wasm_bindgen(module = "/../src/backend/file.ts")]
 extern "C" {
     pub type SyncFile;
 
