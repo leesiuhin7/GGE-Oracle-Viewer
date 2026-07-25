@@ -1,0 +1,18 @@
+.validated-input--valid {
+    background-color: field;
+}
+
+.validated-input--error {
+    background-color: rgb(255, 128, 128);
+}
+
+.border {
+    border-width: 2px;
+    border-style: solid;
+    padding: 2px;
+}
+
+.input {
+    display: flex;
+    gap: 4px;
+}
