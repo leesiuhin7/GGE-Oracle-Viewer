@@ -1,6 +1,6 @@
 import runCommand, { type CommandRequest, type Message } from "./command";
+import downloadData from "./data";
 import SyncFile from "./file";
-import { loadData } from "./methods";
 import Result from "./result";
 import storage from "./storage";
 import { Engine, type Files } from "./wrapper";
@@ -40,16 +40,25 @@ async function fileInit(): Promise<Files> {
 }
 
 const files = await fileInit();
-const engine = new Engine(files);
+storage.files = files;
+
+// Download data if it is empty / corrupted
+const engine: Engine = await (async () => {
+  try {
+    if (files.dataFile.handle.getSize() === 0) {
+      throw new Error();
+    }
+    return new Engine(files);
+  } catch {
+    await downloadData(files.dataFile);
+    return new Engine(files);
+  }
+})();
+
 const result = new Result(engine);
 
-storage.files = files;
 storage.engine = engine;
 storage.result = result;
-
-if (files.dataFile.handle.getSize() === 0) {
-  await loadData(); // Load data if dataFile is empty
-}
 
 function sendMessage(message: Message) {
   self.postMessage(message);
