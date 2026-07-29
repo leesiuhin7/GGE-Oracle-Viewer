@@ -7,11 +7,20 @@ import type {
 import type { ExprTree } from "./expr";
 import { Field } from "./field";
 import type { ResultSnapshots } from "./result";
+import type { CoatOfArms, Header, Location, Snapshot } from "./snapshot";
 import type { SortingCriterion } from "./sorting";
 import BackendWorker from "./worker?worker";
 
 export { Field };
-export type { ExprTree, ResultSnapshots, SortingCriterion };
+export type {
+  CoatOfArms,
+  ExprTree,
+  Header,
+  Location,
+  ResultSnapshots,
+  Snapshot,
+  SortingCriterion,
+};
 
 export default class Backend {
   private readonly worker: Worker;
