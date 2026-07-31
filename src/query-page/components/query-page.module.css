@@ -1,0 +1,9 @@
+.scroll-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.action-button {
+    flex: 1;
+    font-size: 20px;
+}
