@@ -1,5 +1,6 @@
 use std::{cmp::Reverse, collections::BinaryHeap};
 
+#[derive(Clone)]
 pub(crate) struct Interval {
     pub(crate) start: u32,
     pub(crate) end: u32,

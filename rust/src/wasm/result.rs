@@ -23,6 +23,10 @@ impl MatchResult {
             .map(SnapshotInfo)
             .collect()
     }
+
+    pub fn clone(&self) -> MatchResult {
+        MatchResult(self.0.clone())
+    }
 }
 
 impl From<query::MatchResult> for MatchResult {

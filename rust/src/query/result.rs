@@ -5,11 +5,13 @@ pub(crate) struct SnapshotInfo {
     pub(crate) snapshot_id: u32,
 }
 
+#[derive(Clone)]
 struct BlockIntervalSet {
     block_id: usize,
     interval_set: IntervalSet,
 }
 
+#[derive(Clone)]
 pub(crate) struct MatchResult {
     interval_sets: Vec<BlockIntervalSet>,
 }

@@ -28,7 +28,7 @@ export default class Result {
     if (this.matchResult === null) {
       return false;
     }
-    const result = this.engine.sort(this.matchResult, comparators);
+    const result = this.engine.sort(this.matchResult.clone(), comparators);
     if (!result) {
       return false;
     }
