@@ -6,13 +6,14 @@ import Backend, {
 } from "./backend";
 import "./index.css";
 import InitPage, { type State } from "./init-page";
+import OptionPage from "./option-page";
 import QueryPage from "./query-page";
 import RenderPage from "./render";
 
 function App() {
   const backend = useRef<Backend>(null);
+  const [backendInUse, setBackendInUse] = useState(false);
 
-  const [queryDisabled, setQueryDisabled] = useState(false);
   const [refreshSignal, refresh] = useState<Record<string, never>>({});
   const [initState, setInitState] = useState<State>("pending");
   const [page, setPage] = useState(0);
@@ -24,10 +25,10 @@ function App() {
   };
 
   const onMatch = async (expr: ExprTree | undefined) => {
-    if (expr) {
-      setQueryDisabled(true);
-      await backend.current?.matchAll(expr);
-      setQueryDisabled(false);
+    if (expr && backend.current) {
+      setBackendInUse(true);
+      await backend.current.matchAll(expr);
+      setBackendInUse(false);
       refresh({});
     }
   };
@@ -36,16 +37,32 @@ function App() {
     if (!backend.current) {
       return;
     }
-    setQueryDisabled(true);
+    setBackendInUse(true);
     const success = await backend.current.sort(criteria);
-    setQueryDisabled(false);
+    setBackendInUse(false);
     if (success) {
       refresh({});
     }
   };
 
   const readResult = async (skip: number, take: number, fields: Field[]) => {
-    return backend.current?.readResult(skip, take, fields);
+    if (!backend.current) {
+      return;
+    }
+    setBackendInUse(true);
+    const success = await backend.current.readResult(skip, take, fields);
+    setBackendInUse(false);
+    return success;
+  };
+
+  const onReload = async () => {
+    if (!backend.current) {
+      return;
+    }
+    setBackendInUse(true);
+    const success = await backend.current.loadData();
+    setBackendInUse(false);
+    return success;
   };
 
   return (
@@ -73,16 +90,18 @@ function App() {
           }}
         >
           <div style={{ display: "flex", padding: 20 }}>
-            {["Initialization", "Query", "Result"].map((name, index) => (
-              <button
-                key={index}
-                onClick={() => setPage(index)}
-                disabled={page === index}
-                style={{ flex: "1", fontSize: 20 }}
-              >
-                {name}
-              </button>
-            ))}
+            {["Initialization", "Query", "Result", "Options"].map(
+              (name, index) => (
+                <button
+                  key={index}
+                  onClick={() => setPage(index)}
+                  disabled={page === index}
+                  style={{ flex: "1", fontSize: 20 }}
+                >
+                  {name}
+                </button>
+              ),
+            )}
           </div>
           <div style={{ minHeight: 0, flex: "1" }}>
             <Activity mode={page === 0 ? "visible" : "hidden"}>
@@ -90,7 +109,7 @@ function App() {
             </Activity>
             <Activity mode={page === 1 ? "visible" : "hidden"}>
               <QueryPage
-                actionsDisabled={queryDisabled}
+                actionsDisabled={backendInUse}
                 onMatch={onMatch}
                 onSort={onSort}
               />
@@ -100,6 +119,9 @@ function App() {
                 readResult={readResult}
                 refreshSignal={refreshSignal}
               />
+            </Activity>
+            <Activity mode={page === 3 ? "visible" : "hidden"}>
+              <OptionPage onReload={onReload} reloadDisabled={backendInUse} />
             </Activity>
           </div>
         </div>
