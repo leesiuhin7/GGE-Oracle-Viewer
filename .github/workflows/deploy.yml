@@ -41,6 +41,7 @@ jobs:
       - name: Build
         env:
           VITE_DATA_URL: ${{ vars.VITE_DATA_URL }}
+          VITE_BASE_PATH: /${{ github.event.repository.name }}
         run: npm run build
 
       - name: Configure Pages
